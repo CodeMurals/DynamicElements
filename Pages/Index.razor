@@ -1,0 +1,76 @@
+﻿@page "/"
+<h4>Dynamic Elements</h4>
+<style>
+    body {
+        font-size: 12px;
+    }
+
+    table {
+        width: 50% !important;
+    }
+</style>
+
+@if(movies.Count>0)
+{
+<table class="table">
+    <thead>
+        <tr>
+            <th>Movie Name</th>
+            <th>Release Year</th>
+            <th>Co Production</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in movies)
+        {
+            <tr>
+                <td>@item.Name</td>
+                <td>@item.ReleasedYear</td>
+                <td>@item.CoProduction</td>
+            </tr>            
+        }
+    </tbody>
+</table>
+}
+
+<hr />
+<table class="table">
+    <thead>
+        <tr>
+            <th>Movie Name</th>
+            <th>Release Year</th>
+            <th>Co Production</th>
+        </tr>
+    </thead>
+    <tbody>
+    @for (int i = 0; i < movies.Count; i++)
+    {
+        int index = i;
+        <tr>
+            <td><input type="text" value="@movies[index].Name" @onchange="(e) => UpdateName(index, e.Value.ToString())" /> </td>
+            <td><input type="number" value="@movies[index].ReleasedYear" @onchange="(e) => UpdateYear(index, e.Value.ToString())" /> </td>
+            <td><input type="text" value="@movies[index].CoProduction" @onchange="(e) => UpdateCoProduction(index, e.Value.ToString())" /> </td>
+            <td>
+                <button @onclick="() => RemoveRow(index)" class="btn btn-secondary">Remove</button>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>
+
+<button @onclick="AddNewRow" class="btn btn-primary">Create new row</button>
+
+@code {
+    public class Movie
+    {
+        public string? Name { get; set; }
+        public int? ReleasedYear { get; set; }
+        public string? CoProduction { get; set; }
+    }
+    private List<Movie> movies = new();
+    private void RemoveRow(int i) => movies.RemoveAt(i);
+    private void AddNewRow() => movies.Add(new Movie { });
+    private void UpdateName(int i, string value) => movies[i].Name = value;
+    private void UpdateYear(int i, string value) => movies[i].ReleasedYear = int.Parse(value);
+    private void UpdateCoProduction(int i, string value) => movies[i].CoProduction = value;
+}
